@@ -8,7 +8,7 @@ Il minimo per avere un cluster kubernetes è composto da tre VM una control-plan
 
 ## una volta installato il SO, aggiorniamo i pacchetti:
 
-$ sudo apt update & sudo apt upgrade -y
+ ``$ sudo apt update & sudo apt upgrade -y ``
 
 Procediamo con l'installazione e configurazione di docker o un container runtime a noi congeniale:
 
@@ -74,7 +74,7 @@ $ lvdisplay
 ```
 > per far usare LVM da parte Rook.io 
 
-$ sudo modprobe rbd
+ ``$ sudo modprobe rbd ``
 
 ### Rook Deployment:
 ```
@@ -89,9 +89,9 @@ kubectl -n rook-ceph rollout status deploy/rook-ceph-tools
 kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
 ```
 ### Storage Class:
-$ kubectl create -f deploy/examples/csi/rbd/storageclass.yaml
+ ``$ kubectl create -f deploy/examples/csi/rbd/storageclass.yaml ``
 
-> verifica con $ kubectl get pvc
+> verifica con  ``$ kubectl get pvc ``
 
 ### source:
 * https://rook.io/docs/rook/v1.9/quickstart.html
@@ -107,10 +107,10 @@ sudo rm -rf /etc/cni/net.d
 rm -rf .kube/
 ```
 * nel caso non funzioni procedere da docker
-* $ docker rm -f $( docker ps -af )
+*  ``docker rm -f $( docker ps -af ) ``
 
 ## creare un deployment
-kubectl create deployment web --image=nginx --dry-run=client -o yaml 
+ ``$ kubectl create deployment web --image=nginx --dry-run=client -o yaml  ``
 
 ## rendere kubectl utilizzabile tramite TAB
 ```
