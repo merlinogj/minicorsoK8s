@@ -1,5 +1,5 @@
 # minicorsoK8s
-> si parte con la creazione della VM fino al deployment di un cluster con kubeadm per poi aggiungere storage e networking
+> si parte dalla creazione della VM fino al deployment di un cluster con kubeadm per poi aggiungere storage e networking
 
 Il minimo per avere un cluster kubernetes è:
 * una control-plane node 
@@ -24,7 +24,9 @@ a questo punto è richiesto un restart del sistema operativo od un log-out/log-i
 ``$ sudo reboot ``
  
 >potete verificare se esiste docker tra i gruppi secondari con il comando  ``$ id ``
+>
 >student@work2:~$ id
+>
 >uid=1001(student) gid=1001(student) groups=1001(student),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),123(lpadmin),132(lxd),133(sambashare),135(docker)
  
 ## Su tutti i nodi l'area di SWAP non deve essere attiva 
@@ -78,6 +80,9 @@ kubectl get svc -n calico-apiserver
 ## kubeadm join
 
  ``sudo kubeadm join 192.168.1.102:6443 --token u9mltw.5qnvv8j4teyb720h --discovery-token-ca-cert-hash sha256:f8e88186094411e5896e603851a34e3f1c3642bdb8847e375dc4ccf29a77e8ca ``
+> 
+> NB. L'IP del nodo master cambia come il token e l'hash del certificato, il comando riportato è solo a titolo d'esempio e di solito è riportato a seguito del lancio di kubeadm init nel maste node
+> 
 > qui finisce la configurazione dei worker node, tutto il resto si fa dal master node!!!
 
 ## Rook Chep cluster storage:
