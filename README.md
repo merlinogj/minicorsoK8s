@@ -162,9 +162,11 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.
 kubectl port-forward svc/frontend 8080:80
 ```
 ### source:
+* https://kubernetes.io/docs/tutorials/stateless-application/
 
 ## Satefull application
 * wordpress
+* Cassandra
 * zookeper
 
 ### source:
