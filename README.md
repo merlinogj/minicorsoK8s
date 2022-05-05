@@ -148,7 +148,6 @@ $ kubectl delete ns minio-operator
 * https://docs.min.io/minio/k8s/tenant-management/deploy-minio-tenant-using-commandline.html#deploy-minio-tenant-commandline
 * https://github.com/minio/operator/blob/v4.0.10/README.md
 * https://docs.min.io/minio/k8s/deployment/deploy-minio-operator.html#deploy-operator-kubernetes
-* 
 
 ## Stateless application
 ```
@@ -167,7 +166,6 @@ kubectl port-forward svc/frontend 8080:80
 ## Satefull application
 * wordpress
 * zookeper
-* 
 
 ### source:
 * https://kubernetes.io/docs/tutorials/stateful-application/
@@ -175,64 +173,38 @@ kubectl port-forward svc/frontend 8080:80
 ## using kustomization file
 ```
 mkdir wordpress
-mv kustomization.yaml wordpress
-mv mysql-deployment.yaml wordpress
-mv wordpress-deployment.yaml wordpress
 cd wordpress/
-ll
 vi wordpress-deployment.yaml 
 vi mysql-deployment.yaml 
 vi kustomization.yaml 
 kubectl apply -k ./
-  399  cp * ..
-  400  ll
-  401  cd ..
-  402  vi mysql-deployment.yaml 
-  403  vi wordpress-deployment.yaml 
-  404  kubectl delete -k ./
-  405  cd wordpress/
-  406  kubectl apply -k ./
-  
-  407  kubectl config current-context 
-  408  kubectl get pod -A -o wide
-  409  kubectl delete ns tenant1-ns 
-  410  kubectl get pod -A -o wide
+kubectl delete -k ./
+kubectl get pod -A -o wide
 ```
 
 ## esposizione di servizi in Kubernetes
-436  cat mysql.yaml 
-  437  kubectl apply -f mysql.yaml 
-  438  kubectl apply -f wordpress.yaml 
-  439  kubectl get service
-  440  kubectl expose deployment wordpress --type=NodePort --name=max
-  441  kubectl get svc
-  442  ping 10.111.121.234
-  443  kubectl delete services wordpress
-  444  kubectl describe services max 
-  445  kubectl cluster-info
-  446  nslookup cluster.info
-  447  ping cluster.info
-  448  kubectl get svc -A
-  449  ping max.svc.cluster.info
-  450  ip a
-  451  clear
-  452  kubectl get svc -A
-  453  ping max.default.svc.cluster.info
-  454  kubectl -n kube-system describe configmap/coredns
-  455  ping max.default.svc.cluster.local
-  456  kubectl run --rm -it --restart Never --image busybox bbox -- nslookup minio.heptio-ark-server.svc.cluster.local
-  457  kubectl --version
-  458  kubectl -v
-  459  kubectl v
-  460  kubectl version
-
+```
+kubectl get service
+kubectl expose deployment wordpress --type=NodePort --name=max
+kubectl get svc
+kubectl delete services wordpress
+kubectl describe services wordpress 
+kubectl describe cluster-info
+nslookup cluster.local
+ping cluster.local
+kubectl get svc -A
+ping max.default.svc.cluster.local
+kubectl -n kube-system describe configmap/coredns
+ping max.default.svc.cluster.local
+kubectl run --rm -it --restart Never --image busybox bbox -- nslookup minio.heptio-ark-server.svc.cluster.local
+kubectl version
 kubectl expose deployment frontend --name=frontend --type=LoadBalancer
-
+```
 ## ingress controller NGINX
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/cloud/deploy.yaml
 kubectl get pods --namespace=ingress-nginx
-kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=app.kubernetes.io/component=controller   --timeout=120s
+kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller   --timeout=120s
 kubectl get pods --namespace=ingress-nginx
 kubectl get svc
 kubectl delete svc frontend1
