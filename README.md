@@ -11,18 +11,26 @@ Il minimo per avere un cluster kubernetes è composto da tre VM una control-plan
 $ sudo apt update & sudo apt upgrade -y
 
 Procediamo con l'installazione e configurazione di docker o un container runtime a noi congeniale:
- ``$ sudo apt install docker docker-compose ``
- ``$ sudo usermod -aG docker $USER``
- a questo punto è richiesto un restart del sistema operativo od un log-out/log-in per rileggere i gruppi di appartenenza 
- ``$ sudo reboot ``
+
+``$ sudo apt install docker docker-compose ``
+
+``$ sudo usermod -aG docker $USER``
+
+a questo punto è richiesto un restart del sistema operativo od un log-out/log-in per rileggere i gruppi di appartenenza 
+
+``$ sudo reboot ``
  
  >potete verificare se esiste docker tra i gruppi secondari con il comando  ``$ id ``
  
 ## Su tutti i nodi l'area di SWAP non deve essere attiva 
 * altrimenti il kubelet service non parte 
+
 $ free
+
 $ sudo swapoff -a
+
 $ sudo vi /etc/fstab 
+
 $ sudo systemctl mask dev-sda3.swap
 
 ## installare kubeadm, kubectl e kubelet
@@ -31,27 +39,37 @@ $ sudo systemctl mask dev-sda3.swap
 * 
 
 ## creare una SDN interna a kubernetes di tipo Tigera/Calico
+
 sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+
 kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+
 watch kubectl get pods -n calico-system
+
 kubectl get node
+
 docker ps
 
 kubectl get ns
-kubectl get pod -n calico-system -o wide
-kubectl get pod -n calico-apiserver -o wide
 
+kubectl get pod -n calico-system -o wide
+
+kubectl get pod -n calico-apiserver -o wide
 
 kubectl get svc -n calico-apiserver
 
-* source: 
+### source: 
+* 
 
 
 ## Rook Chep cluster storage:
-Ogni nodo deve avere almeno un disco eg. /dev/sdb non utilizzato per altro
+> Ogni nodo deve avere almeno un disco eg. /dev/sdb non utilizzato per altro
 $ lsblk
+
 $ sudo apt-get install -y lvm2
+
 $ lvdisplay 
 
 > per far usare LVM da parte Rook.io 
@@ -59,14 +77,21 @@ $ sudo modprobe rbd
 
 ### Rook Deployment:
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+
 git clone --single-branch --branch v1.9.2 https://github.com/rook/rook.git
+
 cd rook/deploy/examples/
+
 kubectl create -f crds.yaml -f common.yaml -f operator.yaml
+
 kubectl create -f cluster.yaml
+
 kubectl -n rook-ceph get pod -w
 
 kubectl create -f deploy/examples/toolbox.yaml
+
 kubectl -n rook-ceph rollout status deploy/rook-ceph-tools
+
 kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
 
 ### Storage Class:
@@ -83,7 +108,9 @@ $ kubectl create -f deploy/examples/csi/rbd/storageclass.yaml
 
 ## Reset Kubernetes Cluster node
 sudo kubeadm reset
+
 sudo rm -rf /etc/cni/net.d
+
 rm -rf .kube/
 * nel caso non funzioni procedere da docker
 * $ docker rm -f $( docker ps -af )
@@ -98,50 +125,42 @@ source .bashrc
 
 
 ## MINIO BETA
-340  kubectl krew
-  341  (   set -x; cd "$(mktemp -d)" &&   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&   ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&   KREW="krew-${OS}_${ARCH}" &&   curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&   tar zxvf "${KREW}.tar.gz" &&   ./"${KREW}" install krew; )
-  342  vi .bashrc
-  343  source .bashrc
-  344  kubectl krew install minio
-  345  kubectl minio init
-  346  kubectl minio tenant --help
-  347  kubectl minio tenant create --help
-  348  kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Ti
-  349  kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Ti --namespace tenant1-ns
-  350  kubectl minio version
-  351  kubectl get all --namespace minio-operator
-  352  kubectl minio proxy
-  353  kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Ti --namespace tenant1-ns
-  354  kubectl create ns tenant1-ns
-  355  kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Ti --namespace tenant1-ns
-  356  vi tenat1PW
-  357  kubectl get svc --namespace minio-tenant-1
-  358  kubectl get svc --namespace tenant1-ns
-  359  kubectl port-forward service/minio 443:443
-  360  kubectl port-forward service/minio 443:443 --namespace tenant1-ns
-  361  kubectl get pod -A -o wide
-  362  kubectl krew --help
-  363  kubectl krew list
-  364  kubectl krew search
-  365  kubectl get pod -A -o wide
-  366  kubectl minio tenant 
-  367  kubectl minio tenant  list
-  368  kubectl minio tenant 
-  369  kubectl minio tenant delete tenat1 --namespace tenat1-ns
-  370  kubectl minio tenant delete tenant1 --namespace tenat1-ns
-  371  kubectl minio tenant delete tenant1 --namespace tenant1-ns
-  372  kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Gi --namespace tenant1-ns
-  373  kubectl minio tenant  list
-  374  vi tenat1PW 
-  387  kubectl minio tenant expand tenant1 --servers 4 --volumes 16 --capacity 32Gi
-  413  kubectl krew list
-  414  kubectl krew delete minio
-  415  kubectl krew 
-  416  kubectl krew uninstall minio
-  411  kubectl delete ns tenant1-ns 
-  412  kubectl delete ns minio-operator 
+### install krew
+> krew auita ad installare i plugin allinterno di kubernetes
+$ (   set -x; cd "$(mktemp -d)" &&   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&   ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&   KREW="krew-${OS}_${ARCH}" &&   curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&   tar zxvf "${KREW}.tar.gz" &&   ./"${KREW}" install krew; )
+
+### krew auto completion
+$ vi .bashrc
+
+$ source .bashrc
+  
+$ kubectl krew install minio
+
+$ kubectl minio init
+
+$ kubectl create ns tenant1-ns
+
+$ kubectl minio tenant create tenant1 --servers 4 --volumes 16 --capacity 16Ti --namespace tenant1-ns
+
+$ kubectl get all --namespace minio-operator
+
+$ kubectl minio proxy
+
+$ kubectl port-forward service/minio 443:443 --namespace tenant1-ns
+
+$ kubectl minio tenant expand tenant1 --servers 4 --volumes 16 --capacity 32Gi
+
+### remove minio plugin
+$ kubectl krew uninstall minio
+
+$ kubectl delete ns tenant1-ns 
+
+$ kubectl delete ns minio-operator 
 ### source
 * https://krew.sigs.k8s.io/docs/user-guide/setup/install/
+* https://docs.min.io/minio/k8s/tenant-management/deploy-minio-tenant-using-commandline.html#deploy-minio-tenant-commandline
+* https://github.com/minio/operator/blob/v4.0.10/README.md
+* https://docs.min.io/minio/k8s/deployment/deploy-minio-operator.html#deploy-operator-kubernetes
 * 
 
 ## Stateless application
@@ -237,4 +256,5 @@ kubectl expose deployment frontend --name=frontend --type=LoadBalancer
   
   ### source:
   * https://kubernetes.github.io/ingress-nginx/deploy/
+  * https://kubernetes.io/docs/concepts/services-networking/service/
   * 
