@@ -121,6 +121,7 @@ kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
 * https://github.com/rook/rook/blob/master/Documentation/ceph-block.md # creare la storage class
 
 ## Reset Kubernetes Cluster node
+> procedura di solito utilizzata in istallazioni particolarmente sfortunate o in ambiente di laboratorio
 ```
 sudo kubeadm reset
 sudo rm -rf /etc/cni/net.d
@@ -133,12 +134,14 @@ rm -rf .kube/
  ``$ kubectl create deployment web --image=nginx --dry-run=client -o yaml  ``
 
 ## rendere kubectl utilizzabile tramite TAB
+> TIP molto utile quando si fa l'esame CKA
 ```
 kubectl completion bash >> .bashrc
 source .bashrc
 ```
-
+# Alcuni esempi
 ## Stateless application
+> applicazione con un frontend PHP e un beckend in REDIS che utilizza pod stateless ovvero senza storage persistente (la vera essenza dei microservizi!)
 ```
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-deployment.yaml
 kubectl get pod
@@ -154,6 +157,7 @@ kubectl port-forward svc/frontend 8080:80
 * https://kubernetes.io/docs/tutorials/stateless-application/
 
 ## Satefull application
+> applicazioni che hanno un frontend ed un backend che richiede storage persistente ( retro compatibilità con servizi monolitici resi microservizi lasciando inalterata l'infrastruttura)
 * wordpress
 * Cassandra
 * zookeper
@@ -161,7 +165,7 @@ kubectl port-forward svc/frontend 8080:80
 ### source:
 * https://kubernetes.io/docs/tutorials/stateful-application/
 
-## using kustomization file
+## Deploying app using kustomization YAML file
 ```
 mkdir wordpress
 cd wordpress/
