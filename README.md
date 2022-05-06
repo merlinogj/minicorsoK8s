@@ -131,6 +131,8 @@ rm -rf .kube/
 * nel caso non funzioni procedere da docker
 *  ``docker rm -f $( docker ps -af ) ``
 
+* in presenza di logical volumes gestiti da LVM procedere con la rimozione tramite i comandi LVM dei LV, VG e PV
+
 ## creare un deployment
  ``$ kubectl create deployment web --image=nginx --dry-run=client -o yaml  ``
 
