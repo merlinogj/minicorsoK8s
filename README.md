@@ -5,6 +5,7 @@ Il minimo per avere un cluster kubernetes è:
 * una control-plane node 
 * due Worker node, i worker possono essere dinamicamente aggiunti in ottica di scalabilità orizzontale.
 * 4GB RAM e 2 CPU per ogni VM
+* un disco da 160GB che verrà utilizzato come object storage
 
 # Preparazione delle VM 
 > parte comune a tutte, installazione di un xubuntu desktop(più facile puoi installare XRDP)
