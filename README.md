@@ -108,10 +108,11 @@ kubectl get svc -n calico-apiserver
 > 
 > qui finisce la configurazione dei worker node, tutto il resto si fa dal master node!!!
 
-## Rook Chep cluster storage:
-> Ogni nodo deve avere almeno un disco eg. /dev/sdb non utilizzato per altro
+## Rook Ceph cluster storage:
+### su tutti i nodi
+> Ogni nodo deve avere almeno un disco eg. /dev/sdb raw non utilizzato per altro
 ```
-$ lsblk
+$ lsblk -f
 $ sudo apt-get install -y lvm2
 $ lvdisplay 
 ```
@@ -127,6 +128,9 @@ cd rook/deploy/examples/
 kubectl create -f crds.yaml -f common.yaml -f operator.yaml
 kubectl create -f cluster.yaml
 kubectl -n rook-ceph get pod -w
+```
+> apettate qualche minuto, anche 10min in cluster performanti
+```
 kubectl create -f deploy/examples/toolbox.yaml
 kubectl -n rook-ceph rollout status deploy/rook-ceph-tools
 kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
